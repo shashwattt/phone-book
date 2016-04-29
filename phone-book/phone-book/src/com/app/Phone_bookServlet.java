@@ -111,7 +111,7 @@ public class Phone_bookServlet extends HttpServlet {
 			key = KeyFactory.createKey("Contact", Long.valueOf(id));
 			ds.delete(tx,key);
 		}
-		tx.commit();
+		tx.commit();    
 	}	
 	
 	private Entity getEntity(JSONObject json) throws JSONException {

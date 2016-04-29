@@ -66,31 +66,45 @@ public class Phone_bookServlet extends HttpServlet {
 		BufferedReader in = new BufferedReader(isr);
 		String line = in.readLine();
 		JSONObject json;
-		Entity contact = null;
+		Entity entity = null;
+		String mode;
 		try {
 
 		    json = new JSONObject(line); 
 		    String jsonString = json.toString();
-		    String[] names = JSONObject.getNames(json);
-		    contact = getEntity(json);
-		    for (int i=0 ; i < names.length ; i++) {
-		        //System.out.println(names[i] + " : " + json.getString(names[i]));
-		        contact.setProperty(names[i], json.getString(names[i]));
+		    
+		    mode = getMode(json);
+		    switch(mode){
+		    case "save":
+		    	entity = getEntity(json);
+		    	JSONObject saveData = json.getJSONObject("data");
+		    	String[] names = JSONObject.getNames(saveData);
+		    	for (int i=0 ; i < names.length ; i++) {
+		    		//System.out.println(names[i] + " : " + json.getString(names[i]));
+		    		entity.setProperty(names[i], saveData.getString(names[i]));
+		    	}
+		    	ds.put(entity);
+		    	break;
+		    case "del":
+		    	String list = json.getString("list");
+		    	list = list.replace("[", "").replace("]", "");
+				String[] ids = list.split(",");
+				Key key;
+				for(String id : ids){
+					key = KeyFactory.createKey("Contact", Long.valueOf(id));
+					ds.delete(key);
+				}
 		    }
-		    ds.put(contact);
 		    trns.commit();
 		    
 		} catch (Exception e) { e.printStackTrace(); }
-		finally{
-			if(trns.isActive()){
-				trns.rollback();
-			}
-		}
 		
-		System.out.println("Contact saved");
+		
+		System.out.println("Contact saved/ deleted");
 	
 	}
 	
+
 
 	public void doPut(HttpServletRequest request, HttpServletResponse response) {
 	
@@ -132,6 +146,15 @@ public class Phone_bookServlet extends HttpServlet {
 		}
 	}
 	
+	private String getMode(JSONObject json) throws JSONException {
+		String[] names = JSONObject.getNames(json);
+		for (int i=0 ; i < names.length ; i++) {
+			if(names[i].equals("mode")){
+				return json.getString(names[i]).toString();
+			}
+		}
+		return null;
+	}
 	
 	
 	

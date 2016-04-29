@@ -30,7 +30,7 @@ app.controller("displayController", function($scope,$http,$filter) {
 			$scope.id= data.id;
 		}
 	}
-	$scope.delete = function(){
+	$scope.deleteData = function(){
 		
 		var idList = [];
 		angular.forEach($scope.conList, function(contact){
@@ -38,14 +38,18 @@ app.controller("displayController", function($scope,$http,$filter) {
 				idList.push(contact.id);
 			}
 		});
+		var dataTo = {
+				mode : "del",
+				list : idList
+		}
 		
 		var request = {
-				 method: 'DELETE',
+				 method: 'POST',
 				 url: '/phone_book',
 				 headers: {
 				   'Content-Type': 'application/json'
 				 },
-				 data: JSON.stringify(idList)
+				 data: JSON.stringify(dataTo)
 			}
 		$http(request).success(function(response){
 			init();
@@ -71,9 +75,12 @@ app.controller("displayController", function($scope,$http,$filter) {
 			})
 		}
 		var data = {
-			id : $scope.id,
-			name : $scope.name,
-			num : $scope.number
+			mode : "save",
+			data : {
+				id : $scope.id,
+				name : $scope.name,
+				num : $scope.number
+			}
 		}
 		var request = {
 				 method: 'POST',

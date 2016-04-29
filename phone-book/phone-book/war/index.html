@@ -1,0 +1,49 @@
+<html ng-app="app">
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<link href="css/style.css" rel='stylesheet' type='text/css'>
+<body>
+ <!-- href='http://fonts.googleapis.com/css?family=Vollkorn:400,700'  -->
+<div ng-controller="displayController" class="ng-scope">
+<h1 class="description">
+  Phone book demo.
+</h1>
+
+<!-- Table demo -->
+<div class="box-table" data-ng-show="showList">
+
+
+<div id="list8">
+<div style="">
+	<input type="text" placeholder="Search" data-ng-model="filtertext" id="text3"> 
+	<input type="button" class="button" value="+ Add Contact" data-ng-click="addNew()" data-ng-if="!isDelete">
+	<input type="button" class="button" value="- Delete" data-ng-click="delete()" data-ng-if="isDelete"></div>
+   
+   <div style="width:400px ;max-height: 250px; overflow-x: auto; overflow-y: scroll; margin-right: -16px;">
+   <ul>
+      <li data-ng-repeat="x in conList | filter:filtertext | orderBy:'name'">
+		<span style="float:left"><input type="checkbox" data-ng-model="x.check" data-ng-change="checkBoxChange(x.check)"></span>
+		<span style="float:left"><a href="#" data-ng-click="addNew(x)">{{x.name}} <sub style="float:right; padding-right:20px">{{x.num}}</sub>
+		</a></span>
+	</li>
+   </ul>
+   </div>
+</div>
+<table data-fn="contacts" data-url="http://codepen.io/nakome/pen/DnEvr.js"></table>    
+</div>
+<div class="box-table" data-ng-show="!showList">
+<div><input type="text" placeholder="Enter name" data-ng-model="name" class="updateText" ></div>
+<div><input type="text" placeholder="Enter number" data-ng-model="number" class="updateText" ></div>
+<div>
+	<input type="button" class="button" data-ng-click="callSave()" value="Save">
+	<input type="button" class="button" data-ng-click="cancelSaveUpdate()" value="Cancel"></div>
+</div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/displayController.js"></script>
+
+</body>
+</html>
